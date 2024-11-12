@@ -133,8 +133,8 @@ class BaseMotionData(data.Dataset):
                     self.valid_range = data['valid_range']
                     self.file_lst = data['file_lst']
                 
-                if 'labels' in data.keys():
-                    self.labels= data['labels']
+                    if 'labels' in data.keys():
+                        self.labels= data['labels']
                 
             else:
                 file_paths = self.get_motion_fpaths()
@@ -157,7 +157,7 @@ class BaseMotionData(data.Dataset):
                             self.joint_offset =  motion_struct._skeleton.get_joint_offset()
                         else:
                             offset = motion_struct._skeleton.get_joint_offset()
-                            self.joint_offset.append(offset)
+                            self.joint_offset.tolist().append(offset)
 
                     length = len(motion)
 
