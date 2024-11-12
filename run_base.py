@@ -100,7 +100,7 @@ def run(rank, num_procs, args):
     if (trained_model_path != ""):
         try:
             model = model_builder.build_model(model_config_file, dataset, device)
-            state_dict = torch.load(trained_model_path)
+            state_dict = torch.load(trained_model_path, map_location=torch.device(device))
             model.load_state_dict(state_dict)
         except:
             model = torch.load(trained_model_path)
