@@ -2,6 +2,9 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import os
+os.environ['WANDB_API_KEY']='823102a15a4339e9d74f0d9d5ac4e9166f9953c8'
+os.environ['WANDB_ENTITY']='playtime-amdm'
+
 import sys
 import shutil
 import torch
