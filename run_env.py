@@ -184,10 +184,10 @@ def run(rank, num_procs, args):
             
             try:
                 actor_critic = agent.actor_critic
-                state_dict = torch.load(trained_controller_path)
+                state_dict = torch.load(trained_controller_path, map_location=torch.device(device))
                 actor_critic.load_state_dict(state_dict)
             except:
-                actor_critic = torch.load(trained_controller_path)
+                actor_critic = torch.load(trained_controller_path, map_location=torch.device(device))
         
             actor_critic.to(device)
             actor_critic.eval()
