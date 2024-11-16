@@ -91,8 +91,8 @@ class TargetEnv(base_env.EnvBase):
             self.root_facing.fill_(0)
             self.root_xz.fill_(0)
             self.reward.fill_(0)
-            self.timestep = 0
-            self.substep = 0
+            self.timestep.fill_(0)
+            self.substep.fill_(0)
             self.done.fill_(False)
             
             self.reset_target()
@@ -206,7 +206,11 @@ class TargetEnv(base_env.EnvBase):
         self.next_frame = next_frame
         is_external_step = self.substep == 0
 
-        if self.substep == self.frame_skip - 1:
+        # print("打印 substep 的形状", self.substep.shape)  # 打印 substep 的形状
+        # print("self.substep.squeeze()",self.substep.squeeze().shape)
+        # print("打印数据类型 substep", self.substep.dtype)  # 打印数据类型
+
+        if self.substep[0].item() == self.frame_skip - 1:
             self.timestep += 1
         self.substep = (self.substep + 1) % self.frame_skip
 
@@ -232,7 +236,13 @@ class TargetEnv(base_env.EnvBase):
             #self.steps_parallel[reset_indices.cpu().detach()] *= 0
          
         obs_components = self.get_observation_components()
-        self.done.fill_(self.timestep >= self.max_timestep)
+        # print("self.done 的形状", self.done.shape)
+        # print("self.done 的类型", self.done.dtype)
+        # print("self.timestep >= self.max_timestep 的形状", (self.timestep >= self.max_timestep).shape)
+        # print("self.timestep >= self.max_timestep 的类型", (self.timestep >= self.max_timestep).dtype)
+
+        #self.done.fill_(self.timestep >= self.max_timestep)
+        self.done = (self.timestep >= self.max_timestep)
 
         # Everytime this function is called, should call render
         # otherwise the fps will be wrong
