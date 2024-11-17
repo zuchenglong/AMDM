@@ -209,8 +209,7 @@ class TargetEnv(base_env.EnvBase):
         # print("打印 substep 的形状", self.substep.shape)  # 打印 substep 的形状
         # print("self.substep.squeeze()",self.substep.squeeze().shape)
         # print("打印数据类型 substep", self.substep.dtype)  # 打印数据类型
-
-        if self.substep[0].item() == self.frame_skip - 1:
+        if self.substep.squeeze()[0].item() == self.frame_skip - 1:
             self.timestep += 1
         self.substep = (self.substep + 1) % self.frame_skip
 

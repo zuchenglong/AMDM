@@ -179,7 +179,7 @@ class PPOAgent(object):
                     reset_indices = self.env.parallel_ind_buf.masked_select(done.squeeze())
                     obs = self.env.reset_index(reset_indices)
 
-                if end_of_rollout:
+                if end_of_rollout.any():
                     obs = self.env.reset()
 
                 # print(f"obs shape: {obs.shape}, obs dtype: {obs.dtype}")
