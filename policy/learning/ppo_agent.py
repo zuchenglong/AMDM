@@ -134,13 +134,8 @@ class PPOAgent(object):
         obs = self.env.reset()
         # print("Shape of self.rollouts.observations[0]:", self.rollouts.observations[0].shape)
         # print(f"obs shape: {obs.shape}, obs dtype: {obs.dtype}")
-        #
-        # print(f"obs shape: {self.env.observation_space.shape}")
-        # print(f"type(self.env.observation_space): {type(self.env.observation_space)}")
-        # print(f"self.env.observation_space: {self.env.observation_space}")
 
-        adjust_obs = self.adjust_obs_to_rollouts(obs, self.rollouts.observations[0])
-        self.rollouts.observations[0].copy_(adjust_obs)
+        self.rollouts.observations[0].copy_(obs)
         self.rollouts.to(self.device)
         num_samples = 0
         for update in range(self.num_updates):
@@ -182,10 +177,8 @@ class PPOAgent(object):
                 if end_of_rollout.any():
                     obs = self.env.reset()
 
-                # print(f"obs shape: {obs.shape}, obs dtype: {obs.dtype}")
-                adjust_obs = self.adjust_obs_to_rollouts(obs, self.rollouts.observations[0])
                 self.rollouts.insert(
-                    adjust_obs, action, action_log_prob, value, reward, masks, bad_masks
+                    obs, action, action_log_prob, value, reward, masks, bad_masks
                 )
                 
             num_samples += (obs.shape[0]*self.num_steps_per_rollout)
@@ -216,21 +209,6 @@ class PPOAgent(object):
                 }
             self.logger.log_epoch(stats, step=int(num_samples))
             self.logger.print_log(stats)
-
-    def adjust_obs_to_rollouts(self, obs, target_tensor):
-        target_shape = target_tensor.shape  # 获取形状元组
-        obs_flat = obs.flatten()  # 展平输入张量
-        target_size = target_tensor.numel()  # 目标总元素数
-
-        # 插值或截断以适配目标大小
-        if obs_flat.size(0) < target_size:
-            padded_obs = torch.zeros(target_size, dtype=obs.dtype)
-            padded_obs[:obs_flat.size(0)] = obs_flat
-        else:
-            padded_obs = obs_flat[:target_size]
-
-        # 调整到目标形状
-        return padded_obs.view(*target_shape)
 
     def update(self, rollouts):
         advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]
