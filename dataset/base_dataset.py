@@ -157,7 +157,7 @@ class BaseMotionData(data.Dataset):
                             self.joint_offset =  motion_struct._skeleton.get_joint_offset()
                         else:
                             offset = motion_struct._skeleton.get_joint_offset()
-                            self.joint_offset.tolist().append(offset)
+                            self.joint_offset.append(offset)
 
                     length = len(motion)
 
