@@ -41,8 +41,8 @@ class EnvBase(gym.Env):
         self.action_scale = config.get('action_scale',1.0)
         self.test_action_scale = config.get('test_action_scale',self.action_scale)
 
-        self.model_type = config['model_type']
-        if config['model_type'] == 'amdm':
+        self.model_type = config.get('model_type','amdm')
+        if self.model_type == 'amdm':
             
             self.action_step = config['action_step']
             self.use_action_mask = config.get('use_action_mask',False)
@@ -75,11 +75,11 @@ class EnvBase(gym.Env):
             
 
 
-        elif config['model_type'] == 'humor':   
+        elif self.model_type == 'humor':
             self.action_dim = model.action_dim #if hasattr(self.model,'action_dim') else 64
             self.extra_info = None
         
-        elif config['model_type'] == 'mvae':   
+        elif self.model_type == 'mvae':
             self.action_dim = model.action_dim #if hasattr(self.model,'action_dim') else 64
             self.extra_info = None
 
