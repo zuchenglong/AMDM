@@ -177,7 +177,7 @@ class SampleTaskEnv(base_env.EnvBase):
         #torch.manual_seed(7777) #67777
         condition_frames = condition_frames[:,None,:].expand(-1,self.num_candidate,-1)
         condition_frames = condition_frames.reshape(-1,self.frame_dim)
-        print(condition_frames.shape)
+        # print(f"condition_frames.shape {condition_frames.shape}")
         with torch.no_grad():
             frames = self.model.eval_step(condition_frames, self.cur_extra_info)
         frames = self.dataset.denorm_data(frames.cpu()).to(self.device)
@@ -255,7 +255,7 @@ class SampleTaskEnv(base_env.EnvBase):
             self.target[:, 0] = location[0]
             self.target[:, 1] = location[1]
             
-        print(self.target)
+        # print(f"self.target {self.target}")
         
         if self.is_rendered:
             self.viewer.update_target_markers(self.target)
@@ -365,7 +365,7 @@ class SampleTaskEnv(base_env.EnvBase):
 
         self.render()
         return (
-            None,#torch.cat(obs_components, dim=1),
+            obs_components,
             self.reward,
             self.done,
             {"reset": self.timestep >= self.max_timestep},
