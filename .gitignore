@@ -7,7 +7,6 @@ wandb/*
 data/*
 train_logs/*
 output/*
-args/*
 lm/*
 
 # Byte-compiled / optimized / DLL files
