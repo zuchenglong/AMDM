@@ -1,0 +1,13 @@
+--model_config output/base/amdm_100style/config.yaml
+--model_path output/base/amdm_100style/_ep2900.pth
+--agent_config config/agents/ppo.yaml
+
+--env_config  config/envs/sampletask.yaml
+--int_output_dir output/sampletask/amdm_100style/
+--out_model_file output/sampletask/amdm_100style/policy_model.pth
+
+
+--device cpu
+--mode train
+--master_port 0
+--rand_seed 0
