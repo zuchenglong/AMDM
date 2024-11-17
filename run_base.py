@@ -79,7 +79,7 @@ def copy_config_file(config_file, output_dir):
 
 def run(rank, num_procs, args):
     mode = args.parse_string("mode", "train")
-    device = args.parse_string("device", "cuda:0")
+    device = args.parse_string("device", "cpu")
     log_file = args.parse_string("log_file", "")
     out_model_file = args.parse_string("out_model_file", "")
     trained_model_path = args.parse_string("model_path", "")

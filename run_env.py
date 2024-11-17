@@ -120,7 +120,7 @@ def copy_config_file(config_file, output_dir):
             
 def run(rank, num_procs, args):
     mode = args.parse_string("mode", "train")
-    device = args.parse_string("device", 'cuda:0')
+    device = args.parse_string("device", 'cpu')
     
     test_motion_file = args.parse_string("test_motion_file", "")
     test_motion_frame = args.parse_string("test_motion_frame", "")
