@@ -158,7 +158,7 @@ class PPOAgent(object):
                     value, action, action_log_prob = self.actor_critic.act(
                         self.rollouts.observations[step]
                     )
-                print(f"update = {update}/{self.num_updates} step = {step}/{self.num_steps_per_rollout}")
+                print(f"[{datetime.now()}] update = {update}/{self.num_updates} step = {step}/{self.num_steps_per_rollout}")
                 obs, reward, done, info = self.env.step(action)
                 ep_reward += reward
 
