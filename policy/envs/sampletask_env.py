@@ -109,8 +109,9 @@ class SampleTaskEnv(base_env.EnvBase):
         high = np.inf * np.ones([self.action_dim])
         self.action_space = gym.spaces.Box(-high, high, dtype=np.float32)
 
+        # 279 * 1 + 279 = 558
         self.observation_dim = (
-            self.frame_dim * self.num_condition_frames + self.action_dim
+            self.frame_dim * self.num_condition_frames# + self.action_dim
         )
 
         high = np.inf * np.ones([self.observation_dim])
@@ -327,23 +328,28 @@ class SampleTaskEnv(base_env.EnvBase):
         return progress
 
     def calc_potential(self):
-        target_xy_delta, target_z_delta, target_angle = self.get_target_delta_and_angle()
+        target_delta, target_angle =  self.get_target_delta_and_angle()
         #target_delta = torch.cat([target_xy_delta, target_z_delta],dim=-1)
         #print(target_xy_delta, target_z_delta, target_delta, target_xy_delta.norm(dim=1))
-        self.linear_potential = -target_xy_delta.norm(dim=1).unsqueeze(1)  #np.sqrt(target_xy_delta.norm(dim=1)**2+target_z_delta**2)
-        self.delta_z = -target_z_delta
+        self.linear_potential = -target_delta.norm(dim=1).unsqueeze(1)
         self.angular_potential = target_angle.cos()
 
     def get_target_delta_and_angle(self):
-        target_xy_delta = self.target[:,:2] - self.root_xz
-        target_z_delta = self.target[:,2:] - self.root_y
+        # print(f"self.target.shape {self.target.shape}")
+        # target_xy_delta = self.target[:,:2] - self.root_xz
+        # target_z_delta = self.target[:,2:] - self.root_y
+        # target_angle = (
+        #     torch.atan2(target_xy_delta[:, 1], target_xy_delta[:, 0]).unsqueeze(1)
+        #     + self.root_facing
+        # )
+        # #target_delta = torch.cat([target_xy_delta, target_z_delta],dim=-1)
+        # return target_xy_delta, target_z_delta, target_angle
+        target_delta = self.target - self.root_xz
         target_angle = (
-            torch.atan2(target_xy_delta[:, 1], target_xy_delta[:, 0]).unsqueeze(1)
-            + self.root_facing
+                torch.atan2(target_delta[:, 1], target_delta[:, 0]).unsqueeze(1)
+                + self.root_facing
         )
-        #target_delta = torch.cat([target_xy_delta, target_z_delta],dim=-1)
-        return target_xy_delta, target_z_delta, target_angle
-
+        return target_delta, target_angle
     def calc_env_state(self, next_frame):
         self.next_frame = next_frame
         is_external_step = self.substep == 0
@@ -365,7 +371,7 @@ class SampleTaskEnv(base_env.EnvBase):
 
         self.render()
         return (
-            obs_components,
+            obs_components, #torch.cat(obs_components, dim=1), #None, #
             self.reward,
             self.done,
             {"reset": self.timestep >= self.max_timestep},

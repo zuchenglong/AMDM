@@ -33,9 +33,12 @@ class TargetEnv(base_env.EnvBase):
         target_dim = 2
         
         self.target = torch.zeros((self.num_parallel, target_dim)).to(self.device)
+
+        # 279 * 1 + 2 = 281
         self.observation_dim = (self.frame_dim * self.num_condition_frames) + target_dim
         high = np.inf * np.ones([self.observation_dim])
         self.observation_space = gym.spaces.Box(-high, high, dtype=np.float32)
+        #print(f"self.observation_space = {self.observation_space.shape}")
 
         high = np.inf * np.ones([self.action_dim])
         self.aciton_space = gym.spaces.Box(-high, high, dtype=np.float32)
